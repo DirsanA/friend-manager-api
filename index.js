@@ -1,20 +1,44 @@
 const express = require("express");
-const personController = require("./Controller/persons.controllers");
+
 const app = express();
-const port = 5000;
 
-app.use(express.json()); // Moved this to the top to ensure body parsing
+const users = [
+  {
+    id: 0,
+    name: "Samuel Antehun",
+  },
+  {
+    id: 1,
+    name: "Dirsan Antehun",
+  },
+  {
+    id: 2,
+    name: "Hani Antehun",
+  },
+];
 
-// Get all persons
-app.get("/", personController.getPerson);
+// getting all user
 
-// Get person by ID
-app.get("/:id", personController.getById);
+app.get("/users", function (req, res) {
+  res.status(200).send({
+    message: "sucess",
+    data: users,
+  });
+});
 
-// Add a new person
-app.post("/add", personController.addPerson);
+// getting user by its id
 
-// Start the server
-app.listen(port, function () {
-  console.log(`Server is listening at port ${port}`);
+app.get("/users/:id", function (req, res) {
+  const id = req.params.id;
+  const user = users[id];
+
+  if (!user) {
+    return res.status(404).send("EROR: User not found ");
+  }
+  return res.status(200).send(user);
+});
+
+const PORT = 5000;
+app.listen(PORT, function () {
+  console.log(`The server is running on port ${PORT}`);
 });
