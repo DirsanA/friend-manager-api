@@ -37,6 +37,27 @@ app.get("/users/:id", function (req, res) {
   }
   return res.status(200).send(user);
 });
+// adding user by post
+
+app.use(express.json());
+app.get("/users/add", function (req, res) {
+  const newUserName = req.body.name;
+
+  if (!newUserName) {
+    return res.status(400).send({
+      message: "Error :User Name is required",
+    });
+    const newUser = {
+      name: newUserName,
+      id: users.length,
+    };
+    users.push(newUser);
+    return res.status(200).send({
+      message: "Added sucessfuly",
+      data: newUser,
+    });
+  }
+});
 
 const PORT = 5000;
 app.listen(PORT, function () {
