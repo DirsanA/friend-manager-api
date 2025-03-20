@@ -2,16 +2,7 @@ const express = require("express");
 
 const app = express();
 
-const users = [
-  {
-    id: 0,
-    name: "user 1",
-  },
-  {
-    id: 1,
-    name: "user 2",
-  },
-];
+const users = require("./models/users");
 
 app.get("/users", function (req, res) {
   if (users.length === 0) {
@@ -39,7 +30,17 @@ app.post("/users/createUser", function (req, res) {
 });
 
 app.delete("/users/delete/:id", function (req, res) {
-  const id = req.params.id;
+  const id = parseInt(req.params.id); // Convert ID to a number
+  const index = users.findIndex(function (user) {
+    return user.id === id; // the current id is equal to the id
+  }); // Find user index
+
+  if (index === -1) {
+    return res.status(404).send("User not found");
+  }
+
+  users.splice(index, 1); // Remove the user
+  res.status(200).send({ message: "User deleted", users }); // Send response
 });
 
 app.get("/users/:id", function (req, res) {
