@@ -4,23 +4,33 @@ const app = express();
 
 app.use(express.json());
 // posting user
-app.post("/users/createUser", function (req, res) {
-  userModel
-    .create(req.body)
-    .then(function (data) {
-      res.send(data);
-    })
-    .catch(function (err) {
-      console.log(err);
+app.post("/users/createUser", async function (req, res) {
+  try {
+    // Create user
+    const user = await userModel.create(req.body);
+
+    return res.status(201).send({
+      message: "The user is created",
+      data: user,
     });
+  } catch (err) {
+    console.error(err); // Log error for debugging
+    return res.status(400).send({
+      message: "The user could not be created",
+      error: err.message, // Provide error details in response
+    });
+  }
 });
 
 //getting all user
 
-app.get("/users", function (req, res) {
-  userModel.find({}).then(function (data) {
-    return res.status(200).send(data);
-  });
+app.get("/users", async function (req, res) {
+  try {
+    const users = await userModel.find({});
+    return res.status(200).send(users);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
 });
 
 // deleting the user
