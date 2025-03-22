@@ -35,14 +35,17 @@ app.get("/users", async function (req, res) {
 
 // deleting the user
 
-app.delete("/users/:id", function (req, res) {
-  const id = req.params.id;
-  if (!id) {
-    return res.status(404).send("the id is not found");
+app.delete("/users/:id", async function (req, res) {
+  try {
+    const id = req.params.id;
+    if (!id) {
+      return res.status(404).send("the id is not found");
+    }
+    const user = await userModel.findByIdAndDelete(id);
+    return res.status(200).send("User deleted successfully");
+  } catch (err) {
+    return res.status(500).send(err);
   }
-  userModel.findByIdAndDelete(id).then(function () {
-    return res.status(200).send("the user is deleted");
-  });
 });
 
 module.exports = app;
