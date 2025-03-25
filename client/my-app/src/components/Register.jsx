@@ -1,11 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState(""); // ✅ State for success message
+  const navigate = useNavigate();
+  /*************  ✨ Codeium Command ⭐  *************/
+  /**
+   * Handles the form submission to create a new user.
+   * Prevents the default form action, sends a POST request to the server with the user details,
+   * and handles the server response.
+   * Displays a success message and redirects to the home page after a delay.
+   * Logs any errors encountered during the request.
+   *
+   * @param {Event} e - The event object from the form submission.
+   */
 
+  /******  ea4db16b-94fd-4b95-b43f-3c83b4887267  *******/
   async function Submit(e) {
     e.preventDefault();
 
@@ -16,17 +28,12 @@ const Register = () => {
       );
       console.log(response);
 
-      // ✅ Show success message
       setSuccessMessage("Success!");
 
-      // ✅ Clear input fields
-      setName("");
-      setEmail("");
-
-      // ✅ Remove success message after 3 seconds
       setTimeout(() => {
-        setSuccessMessage(""); // Hide message after 3 seconds
-      }, 3000);
+        setSuccessMessage("");
+        navigate("/");
+      }, 1000);
     } catch (err) {
       console.log(err);
     }
