@@ -25,7 +25,9 @@ const Home = () => {
     axios
       .delete(`http://localhost:9000/users/${userId}`)
       .then(() => {
-        setUsers(users.filter((user) => user._id !== userId)); // Remove from UI
+        setUsers((prevUsers) =>
+          prevUsers.filter((user) => user._id !== userId)
+        ); // Ensures latest state
       })
       .catch((err) => {
         console.log("Error deleting user:", err);
@@ -49,23 +51,33 @@ const Home = () => {
           <p className="text-gray-400 text-center">No users found.</p>
         ) : (
           <ul>
-            {users.map((user) => (
+            {users.map(function (user) {
+              // user is an array of objects from mongodb which is randomly given name user but ican also say people
               <li
-                key={user._id}
+                key={user._id} // the id that comes from mongodb
                 className="flex justify-between items-center p-2 border-gray-600 border-b"
               >
                 <div>
                   <strong>Name:</strong> {user.name} <br />
                   <strong>Email:</strong> {user.email}
                 </div>
-                <button
-                  className="bg-red-500 hover:bg-red-600 ml-4 px-3 py-1 rounded-md text-white transition"
-                  onClick={() => deleteUser(user._id)}
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
+                <div className="flex">
+                  <button
+                    className="bg-red-500 hover:bg-red-600 ml-4 px-3 py-1 rounded-md text-white transition"
+                    onClick={() => deleteUser(user._id)}
+                  >
+                    Delete
+                  </button>
+
+                  <button
+                    className="bg-green-500 hover:bg-green-600 ml-4 px-3 py-1 rounded-md text-white transition"
+                    onClick={() => navigate(`/update/${user._id}`)}
+                  >
+                    Update
+                  </button>
+                </div>
+              </li>;
+            })}
           </ul>
         )}
       </div>
