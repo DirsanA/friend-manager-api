@@ -22,16 +22,18 @@ const Home = () => {
   }
 
   function deleteUser(userId) {
-    axios
-      .delete(`http://localhost:9000/users/${userId}`)
-      .then(() => {
-        setUsers((prevUsers) =>
-          prevUsers.filter((user) => user._id !== userId)
-        ); // Ensures latest state
-      })
-      .catch((err) => {
-        console.log("Error deleting user:", err);
-      });
+    if (window.confirm("Are you sure delete user")) {
+      axios
+        .delete(`http://localhost:9000/users/${userId}`)
+        .then(() => {
+          setUsers((prevUsers) =>
+            prevUsers.filter((user) => user._id !== userId)
+          ); // Ensures latest state
+        })
+        .catch((err) => {
+          console.log("Error deleting user:", err);
+        });
+    }
   }
 
   return (
@@ -53,30 +55,32 @@ const Home = () => {
           <ul>
             {users.map(function (user) {
               // user is an array of objects from mongodb which is randomly given name user but ican also say people
-              <li
-                key={user._id} // the id that comes from mongodb
-                className="flex justify-between items-center p-2 border-gray-600 border-b"
-              >
-                <div>
-                  <strong>Name:</strong> {user.name} <br />
-                  <strong>Email:</strong> {user.email}
-                </div>
-                <div className="flex">
-                  <button
-                    className="bg-red-500 hover:bg-red-600 ml-4 px-3 py-1 rounded-md text-white transition"
-                    onClick={() => deleteUser(user._id)}
-                  >
-                    Delete
-                  </button>
+              return (
+                <li
+                  key={user._id} // the id that comes from mongodb
+                  className="flex justify-between items-center p-2 border-gray-600 border-b"
+                >
+                  <div>
+                    <strong>Name:</strong> {user.name} <br />
+                    <strong>Email:</strong> {user.email}
+                  </div>
+                  <div className="flex">
+                    <button
+                      className="bg-red-500 hover:bg-red-600 ml-4 px-3 py-1 rounded-md text-white transition"
+                      onClick={() => deleteUser(user._id)}
+                    >
+                      Delete
+                    </button>
 
-                  <button
-                    className="bg-green-500 hover:bg-green-600 ml-4 px-3 py-1 rounded-md text-white transition"
-                    onClick={() => navigate(`/update/${user._id}`)}
-                  >
-                    Update
-                  </button>
-                </div>
-              </li>;
+                    <button
+                      className="bg-green-500 hover:bg-green-600 ml-4 px-3 py-1 rounded-md text-white transition"
+                      onClick={() => navigate(`/update/${user._id}`)}
+                    >
+                      Update
+                    </button>
+                  </div>
+                </li>
+              );
             })}
           </ul>
         )}
